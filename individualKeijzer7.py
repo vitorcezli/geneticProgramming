@@ -49,28 +49,7 @@ class individualKeijzer7(individual):
 		# gets the datum with the values
 		datum_and_values = self.get_datum_with_values(values)
 		print(datum_and_values)
-
-		# returns the same number if there isn't a function
-		if isinstance(datum_and_values, numbers.Number):
-			return datum_and_values
-
-		# classifies for log function
-		elif datum_and_values[0] == 'log':
-			base = self.classify(datum_and_values[1])
-			exponent = self.classify(datum_and_values[2])
-			return math.log(exponent, base)
-
-		# classifies for sum function
-		elif datum_and_values[0] == 'sum':
-			factor1 = self.classify(datum_and_values[1])
-			factor2 = self.classify(datum_and_values[2])
-			return factor1 + factor2
-
-		# an error has happened
-		else:
-			print("An error occurred on genotype format: %s" % 
-				(str(datum_and_values)))
-			exit(1)
+		return classify_datum_with_values(datum_and_values)
 
 
 	def classify_datum_with_values(self, datum_and_values):
