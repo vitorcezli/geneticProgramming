@@ -10,11 +10,11 @@ class individual(ABC):
 		self.genotype = self.generate_genotype(size)
 		self.number_arguments = number_arguments
 
-	def get_number_arguments():
-		"gets the number of arguments necessary"
+	def get_number_arguments(self):
+		"Gets the number of arguments necessary"
 		return self.number_arguments
 
-	def get_genotype():
+	def get_genotype(self):
 		"Returns the individual's genotype"
 		return self.genotype
 
