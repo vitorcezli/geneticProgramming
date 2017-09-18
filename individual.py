@@ -5,9 +5,18 @@ from abc import ABC, abstractmethod
 class individual(ABC):
 	"The representation for a genetic programming individual"
 
-	def __init__(self, size):
+	def __init__(self, size, number_arguments):
 		"Initializes the tree with its genotype"
-		self.genotype = generate_genotype(size)
+		self.genotype = self.generate_genotype(size)
+		self.number_arguments = number_arguments
+
+	def get_number_arguments():
+		"gets the number of arguments necessary"
+		return self.number_arguments
+
+	def get_genotype():
+		"Returns the individual's genotype"
+		return self.genotype
 
 	@abstractmethod
 	def generate_genotype(self, size):

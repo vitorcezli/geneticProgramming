@@ -5,20 +5,43 @@ import math
 
 
 class individualKeijzer7(individual):
-	"The representation for a genetic programming individual"
+	"The representation for a genetic programming keijzer7 individual"
 
-	def __init__(self, size):
+
+
+	def __init__(self, size, number_arguments):
 		"Initializes the tree with its genotype"
-		self.genotype = self.generate_genotype(size)
+		super().__init__(size, number_arguments)
+
+
 
 	def generate_genotype(self, size):
 		"Generates the individual's genotype"
 		return ['sum', ['log', 10, 'XX'], 3]
 
 
+
+	def get_datum_with_values_h(self, values, vi, g_list):
+		for index in range(len(g_list)):
+			if g_list[index] == 'XX':
+				g_list[index] = values[vi]
+				vi += 1
+			elif # g_list[index] is a list:
+				vi = self.get_datum_with_values_h(self, values, vi, g_list[index])
+		return vi
+
+
 	def get_datum_with_values(self, values):
-		"gets the datum with the values"
-		
+		"Gets the datum with the values"
+		if len(values) != super.get_number_arguments()
+			print("Error on values' length")
+			exit(1)
+
+		# copy
+
+		return self.get_datum_with_values_h(values, 0, genotype)
+
+
 
 
 	def classify(self, values):
@@ -46,16 +69,21 @@ class individualKeijzer7(individual):
 		else:
 			print("An error occurred on genotype format: %s" % 
 				(str(datum_and_values)))
-			exit()
+			exit(1)
 		
+
 
 	def mutate(self):
 		"Mutates the individual"
 		pass
 
+
+
 	def cross(self, other_individual):
 		"Returns a new individual using crossover operation"
 		pass
+
+
 
 
 individual = individualKeijzer7(7)
