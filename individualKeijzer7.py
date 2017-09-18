@@ -7,8 +7,6 @@ import math
 class individualKeijzer7(individual):
 	"The representation for a genetic programming keijzer7 individual"
 
-
-
 	def __init__(self, size, number_arguments):
 		"Initializes the tree with its genotype"
 		super().__init__(size, number_arguments)
@@ -41,8 +39,8 @@ class individualKeijzer7(individual):
 		else:
 			print("An error occurred on genotype format: %s" % 
 				(str(datum_and_values)))
-			exit(1)		
-		
+			exit(1)
+
 
 	def mutate(self):
 		"Mutates the individual"
@@ -56,3 +54,4 @@ class individualKeijzer7(individual):
 
 individual = individualKeijzer7(7, 1)
 print(individual.classify([100]))
+print(individual.get_all_lists())

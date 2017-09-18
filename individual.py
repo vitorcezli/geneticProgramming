@@ -30,7 +30,7 @@ class individual(ABC):
 
 
 	def get_datum_with_values_h(self, values, vi, g_list):
-		"Gets the datum with the values recursivelly"
+		"Gets the datum with the values recursively"
 		for index in range(len(g_list)):
 			if g_list[index] == 'XX':
 				g_list[index] = values[vi]
@@ -49,6 +49,24 @@ class individual(ABC):
 		genotype_copy = copy.deepcopy(self.get_genotype())
 		self.get_datum_with_values_h(values, 0, genotype_copy)
 		return genotype_copy
+
+
+	def get_all_lists(self):
+		"Gets all lists for crossover"
+		genotype = self.get_genotype()
+		list_all = []
+		self.get_all_lists_h(genotype, [], list_all)
+		return list_all
+
+
+	def get_all_lists_h(self, current_list, iuh, list_all):
+		"Gets all lists for crossover recursively"
+		for index in range(len(current_list)):
+			if type(current_list[index]) is list:
+				list_indexes = iuh[:]
+				list_indexes.append(index)
+				list_all.append(list_indexes + copy.deepcopy(current_list[index]))
+				self.get_all_lists_h(current_list[index], list_indexes, list_all)
 
 
 	@abstractmethod
