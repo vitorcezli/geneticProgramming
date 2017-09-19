@@ -10,6 +10,19 @@ class individual(ABC):
 		"Initializes the tree with its genotype"
 		self.genotype = self.generate_genotype(size)
 		self.number_arguments = number_arguments
+		self.size = size
+
+
+	def __init__(self, genotype, size, number_arguments):
+		"Initializes the tree passing the genotype"
+		self.genotype = genotype
+		self.number_arguments = number_arguments
+		self.size = size
+
+
+	def get_size(self):
+		"Gets the maximum size"
+		return self.size
 
 
 	def get_number_arguments(self):
