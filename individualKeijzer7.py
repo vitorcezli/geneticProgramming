@@ -14,7 +14,7 @@ class individualKeijzer7(individual):
 
 	def generate_genotype(self, size):
 		"Generates the individual's genotype"
-		return ['sum', ['log', 10, 'XX'], 3]
+		return ['sum', ['log', 10, ['log', 10, 'XX']], 3]
 
 
 	def classify_datum_with_values(self, datum_and_values):

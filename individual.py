@@ -24,7 +24,6 @@ class individual(ABC):
 
 	def classify(self, values):
 		"Classifies the data based on the genotype"
-		# gets the datum with the values
 		datum_and_values = self.get_datum_with_values(values)
 		return self.classify_datum_with_values(datum_and_values)
 
@@ -65,7 +64,7 @@ class individual(ABC):
 			if type(current_list[index]) is list:
 				list_indexes = iuh[:]
 				list_indexes.append(index)
-				list_all.append(list_indexes + copy.deepcopy(current_list[index]))
+				list_all.append([list_indexes] + copy.deepcopy(current_list[index]))
 				self.get_all_lists_h(current_list[index], list_indexes, list_all)
 
 
