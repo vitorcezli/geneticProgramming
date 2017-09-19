@@ -55,3 +55,4 @@ class individualKeijzer7(individual):
 individual = individualKeijzer7(7, 1)
 print(individual.classify([100]))
 print(individual.get_all_lists())
+print(individual.get_tree_size(['sum', ['log', 10, ['log', [10, ['XX']]]], 3]))

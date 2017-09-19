@@ -58,13 +58,30 @@ class individual(ABC):
 		return list_all
 
 
+	def get_tree_size(self, list_tree):
+		"Gets the tree's size"
+		tree_string = str(list_tree)
+		maximum = -1
+		deep = 0
+
+		for index in range(len(tree_string)):
+			if tree_string[index] == '[':
+				deep += 1
+				if maximum < deep:
+					maximum = deep
+			elif tree_string[index] == ']':
+				deep -= 1
+		return maximum
+
+
 	def get_all_lists_h(self, current_list, iuh, list_all):
 		"Gets all lists for crossover recursively"
 		for index in range(len(current_list)):
 			if type(current_list[index]) is list:
 				list_indexes = iuh[:]
 				list_indexes.append(index)
-				list_all.append([list_indexes] + copy.deepcopy(current_list[index]))
+				list_all.append([list_indexes] + [copy.deepcopy(current_list[index])] +
+					[[self.get_tree_size(current_list[index])]])
 				self.get_all_lists_h(current_list[index], list_indexes, list_all)
 
 
