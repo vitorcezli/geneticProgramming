@@ -53,7 +53,7 @@ class individualKeijzer7(individual):
 		"Returns a new individual using crossover operation"
 		# get possibilities for crossover
 		this_list = super().get_all_lists()
-		other_list = super().get_all_lists()
+		other_list = other_individual.get_all_lists()
 		possibilities = []
 		for tl in this_list:
 			for ol in other_list:
