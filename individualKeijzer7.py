@@ -9,19 +9,14 @@ import copy
 class individualKeijzer7(individual):
 	"The representation for a genetic programming keijzer7 individual"
 
-	def __init__(self, size, number_arguments):
+	def __init__(self, size, number_arguments, genotype = None):
 		"Initializes the tree with its genotype"
-		super().__init__(size, number_arguments)
-
-
-	def __init__(self, genotype, size, number_arguments):
-		"Initializes the tree passing the genotype"
-		super().__init__(genotype, size, number_arguments)
+		super().__init__(size, number_arguments, genotype)
 
 
 	def generate_genotype(self, size):
 		"Generates the individual's genotype"
-		return ['sum', ['log', 10, ['log', 10, 'XX']], 3]
+		return ['sum', ['log', ['log', 133, 'XX'], ['sum', 10, 'XX']], ['log', 7, 'XX']]
 
 
 	def classify_datum_with_values(self, datum_and_values):
@@ -63,31 +58,28 @@ class individualKeijzer7(individual):
 		for tl in this_list:
 			for ol in other_list:
 				if len(tl[0]) + ol[2][0] <= self.get_size():
-					possibilities.append(tl)
-					possibilities.append(ol)
+					if str(tl).count("XX") == str(ol).count("XX"):
+						possibilities.append(tl)
+						possibilities.append(ol)
 
 		# selects genotypes for crossover
-		random_index = random.randint(0, len(possibilities) - 1)
-		indexes_substitution = possibilities[random_index][0]
-		genotypes_substitution = possibilities[random_index + 1][1]
+		random_index = random.randint(0, len(possibilities) / 2 - 1)
+		indexes_substitution = possibilities[2 * random_index][0]
+		genotypes_substitution = possibilities[2 * random_index + 1][1]
 
 		# generates another individual with genotype from crossover
 		new_genotype = copy.deepcopy(super().get_genotype())
 		list_substitution = new_genotype
-		print(new_genotype)
-		print(indexes_substitution)
-		print(genotypes_substitution)
 		for index in range(len(indexes_substitution) - 1):
 			list_substitution = list_substitution[indexes_substitution[index]]
 		list_substitution[indexes_substitution[len(indexes_substitution) - 1]] = \
 			genotypes_substitution
-		print(new_genotype)
-		new_individual = individualKeijzer7(new_genotype, super().get_size(), \
-			super().get_number_arguments())
+		new_individual = individualKeijzer7(super().get_size(), \
+			super().get_number_arguments(), new_genotype)
 		return new_individual
 
 
-individual = individualKeijzer7(7, 1)
-individual2 = individualKeijzer7(7, 1)
-print(individual.classify([100]))
+individual = individualKeijzer7(7, 3)
+individual2 = individualKeijzer7(7, 3)
 i = individual.cross(individual2)
+print(i.get_genotype())

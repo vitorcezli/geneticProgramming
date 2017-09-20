@@ -6,16 +6,12 @@ import copy
 class individual(ABC):
 	"The representation for a genetic programming individual"
 
-	def __init__(self, size, number_arguments):
+	def __init__(self, size, number_arguments, genotype):
 		"Initializes the tree with its genotype"
-		self.genotype = self.generate_genotype(size)
-		self.number_arguments = number_arguments
-		self.size = size
-
-
-	def __init__(self, genotype, size, number_arguments):
-		"Initializes the tree passing the genotype"
-		self.genotype = genotype
+		if genotype is None:
+			self.genotype = self.generate_genotype(size)
+		else:
+			self.genotype = genotype
 		self.number_arguments = number_arguments
 		self.size = size
 
