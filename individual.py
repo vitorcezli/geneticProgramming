@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from abc import ABC, abstractmethod
 import copy
+import random
 
 
 class individual(ABC):
@@ -92,6 +93,34 @@ class individual(ABC):
 				list_all.append([list_indexes] + [copy.deepcopy(current_list[index])] +
 					[[self.get_tree_size(current_list[index])]])
 				self.get_all_lists_h(current_list[index], list_indexes, list_all)
+
+
+	def get_genotype_of_cross(self, other_individual):
+		"Returns a new genotype using crossover operation"
+		# get possibilities for crossover
+		this_list = self.get_all_lists()
+		other_list = other_individual.get_all_lists()
+		possibilities = []
+		for tl in this_list:
+			for ol in other_list:
+				if len(tl[0]) + ol[2][0] <= self.get_size():
+					if str(tl).count("XX") == str(ol).count("XX"):
+						possibilities.append(tl)
+						possibilities.append(ol)
+
+		# selects genotypes for crossover
+		random_index = random.randint(0, len(possibilities) / 2 - 1)
+		indexes_substitution = possibilities[2 * random_index][0]
+		genotypes_substitution = possibilities[2 * random_index + 1][1]
+
+		# generates another individual with genotype from crossover
+		new_genotype = copy.deepcopy(self.get_genotype())
+		list_substitution = new_genotype
+		for index in range(len(indexes_substitution) - 1):
+			list_substitution = list_substitution[indexes_substitution[index]]
+		list_substitution[indexes_substitution[len(indexes_substitution) - 1]] = \
+			genotypes_substitution
+		return new_genotype
 
 
 	@abstractmethod
