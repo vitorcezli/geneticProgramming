@@ -17,6 +17,23 @@ class individual(ABC):
 		self.size = size
 
 
+	def generate_terminal_list(self, list_functions):
+		"Generates a list with a terminal"
+		generated_list = self.generate_function_list(list_functions)
+		generated_list[random.randint(0, len(generated_list) - 2) + 1] = 'XX'
+		print(generated_list)
+		return generated_list
+
+
+	def generate_function_list(self, list_functions):
+		"Generates a list with a function and its arguments"
+		selected_function = list_functions[random.randint(0, len(list_functions) - 1)]
+		generated_list = [selected_function[0]]
+		for index in range(selected_function[1]):
+			generated_list.append(random.random())
+		return generated_list
+
+
 	def get_size(self):
 		"Gets the maximum size"
 		return self.size
