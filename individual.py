@@ -35,23 +35,50 @@ class individual(ABC):
 		return generated_list
 
 
-	def generate_subtree(self, list_functions, n_arguments, size):
+	def generate_subtree(self, list_functions, size):
 		"Generates a random subtree with maximum size"
 		current_list = self.generate_function_list(list_functions)
 		if size > 1:
 			self.generate_subtree_h(current_list, list_functions, 0, \
 				size - 1, 1 / (size - 1))
-			lists = self.get_all_lists(current_list)
-			selected_elements = self.select_elements_from_list(lists, n_arguments)
-			
-			# puts the arguments indicator
-			change_list = current_list
-			for list_selected in selected_elements:
-				for index in list_selected[0]:
-					change_list = change_list[index]
-				change_list[random.randint(0, len(change_list) - 2) + 1] = 'XX'
-
 		return current_list
+
+
+	def put_terminals_on_tree(self, tree, n_arguments):
+		"Defines the places of the terminals"
+		lists = self.get_all_lists(tree)
+		print(lists)
+		print("\n\n")
+
+		# delete general elements
+		indexes_deletion = []
+		for index1 in range(len(lists)):
+			for index2 in range(len(lists)):
+				if index1 == index2:
+					continue
+				elif self.more_specific(lists[index1][0], lists[index2][0]) \
+					and index1 not in indexes_deletion:
+					indexes_deletion.append(index1)
+
+		print(indexes_deletion)
+		print("\n\n")
+		number_deleted = 0
+		for index in indexes_deletion:
+			del lists[index - number_deleted]
+			number_deleted += 1
+		print(lists)
+		print("\n\n")
+
+
+	def more_specific(self, list1, list2):
+		"Returns if list2 is more specific than list1"
+		if len(list1) >= len(list2):
+			return False
+		else:
+			for index in range(len(list1)):
+				if list2[index] != list1[index]:
+					return False
+		return True
 
 
 	def select_elements_from_list(self, lists, number):
