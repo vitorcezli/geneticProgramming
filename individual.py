@@ -10,12 +10,13 @@ class individual(ABC):
 
 	def __init__(self, size, number_arguments, genotype):
 		"Initializes the tree with its genotype"
+		self.number_arguments = number_arguments
+		self.size = size
+		
 		if genotype is None:
 			self.genotype = self.generate_genotype(size)
 		else:
 			self.genotype = genotype
-		self.number_arguments = number_arguments
-		self.size = size
 
 
 	def generate_terminal_list(self, list_functions):
@@ -64,11 +65,14 @@ class individual(ABC):
 		for index in indexes_deletion:
 			del lists[index - number_deleted]
 			number_deleted += 1
-		lists_terminal = self.select_elements_from_list(lists, n_arguments)
 
 		# puts the terminals on the list
-		for element in lists_terminal:
-			self.put_terminal_on_list(tree, element[0])
+		lists_terminal = self.select_elements_from_list(lists, n_arguments)
+		if len(lists_terminal) == n_arguments:
+			for element in lists_terminal:
+				self.put_terminal_on_list(tree, element[0])
+		else:
+			return None
 
 
 	def put_terminal_on_list(self, list_s, places):

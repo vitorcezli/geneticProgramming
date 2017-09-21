@@ -14,7 +14,10 @@ class individualKeijzer7(individual):
 
 	def generate_genotype(self, size):
 		"Generates the individual's genotype"
-		return ['sum', ['log', ['log', 133, 'XX'], ['sum', 10, 'XX']], ['log', 7, 'XX']]
+		subtree = super().generate_subtree([['log', 2], ['sum', 2]], size)
+		print(subtree)
+		super().put_terminals_on_tree(subtree, super().get_number_arguments())
+		return subtree
 
 
 	def classify_datum_with_values(self, datum_and_values):
@@ -55,8 +58,5 @@ class individualKeijzer7(individual):
 		return new_individual
 
 
-individual = individualKeijzer7(7, 7)
-tree = individual.generate_subtree([['log', 2], ['sum', 2], ['exp', 1]], 2)
-print(tree)
-individual.put_terminals_on_tree(tree, 2)
-print(tree)
+individual = individualKeijzer7(3, 2)
+print(individual.get_genotype())
