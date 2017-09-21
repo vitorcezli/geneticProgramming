@@ -36,13 +36,32 @@ class individual(ABC):
 		return generated_list
 
 
-	def generate_subtree(self, list_functions, size):
+	def generate_subtree(self, list_functions, n_arguments, size):
 		"Generates a random subtree with maximum size"
 		current_list = self.generate_function_list(list_functions)
 		if size > 1:
 			self.generate_subtree_h(current_list, list_functions, 0, \
 				size - 1, 1 / (size - 1))
+			lists = self.get_all_lists(current_list)
+			selected_elements = self.select_elements_from_list(lists, n_arguments)
+			print(selected_elements)
 		return current_list
+
+
+	def select_elements_from_list(self, lists, number):
+		"Selects elements from list"
+		if number == len(lists):
+			return lists
+		elif number < len(lists):
+			select_list = []
+			while number > 0:
+				selected_index = random.randint(0, len(lists) - 1)
+				select_list.append(lists[selected_index])
+				del lists[selected_index]
+				number -= 1
+			return select_list
+		else:
+			return None
 
 
 	def generate_subtree_h(self, current_list, list_functions, \
@@ -103,11 +122,10 @@ class individual(ABC):
 		return genotype_copy
 
 
-	def get_all_lists(self):
+	def get_all_lists(self, lists):
 		"Gets all lists for crossover"
-		genotype = self.get_genotype()
 		list_all = []
-		self.get_all_lists_h(genotype, [], list_all)
+		self.get_all_lists_h(lists, [], list_all)
 		return list_all
 
 
@@ -141,8 +159,8 @@ class individual(ABC):
 	def get_genotype_of_cross(self, other_individual):
 		"Returns a new genotype using crossover operation"
 		# get possibilities for crossover
-		this_list = self.get_all_lists()
-		other_list = other_individual.get_all_lists()
+		this_list = self.get_all_lists(self.get_genotype())
+		other_list = other_individual.get_all_lists(self.get_genotype())
 		possibilities = []
 		for tl in this_list:
 			for ol in other_list:

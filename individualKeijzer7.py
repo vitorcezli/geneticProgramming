@@ -56,4 +56,6 @@ class individualKeijzer7(individual):
 
 
 individual = individualKeijzer7(7, 7)
-print(individual.generate_subtree([['log', 2], ['sum', 2], ['exp', 1]], 3))
+print(individual.generate_subtree([['log', 2], ['sum', 2], ['exp', 1]], 2, 3))
+lists = ['a', 'b', 'c', 'd', 'e', 'f']
+individual.select_elements_from_list(lists, 2)
