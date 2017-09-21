@@ -46,7 +46,10 @@ class individual(ABC):
 
 	def put_terminals_on_tree(self, tree, n_arguments):
 		"Defines the places of the terminals"
+		# get all possibilities
 		lists = self.get_all_lists(tree)
+		if lists == []:
+			lists = [[[0], tree, [len(tree)]]]
 
 		# delete general elements
 		indexes_deletion = []
@@ -57,12 +60,23 @@ class individual(ABC):
 				elif self.more_specific(lists[index1][0], lists[index2][0]) \
 					and index1 not in indexes_deletion:
 					indexes_deletion.append(index1)
-
 		number_deleted = 0
 		for index in indexes_deletion:
 			del lists[index - number_deleted]
 			number_deleted += 1
-		print(lists)
+		lists_terminal = self.select_elements_from_list(lists, n_arguments)
+
+		# puts the terminals on the list
+		for element in lists_terminal:
+			self.put_terminal_on_list(tree, element[0])
+
+
+	def put_terminal_on_list(self, list_s, places):
+		"Puts terminal on a list"
+		list_n = list_s
+		for place in places:
+			list_n = list_n[place]
+		list_n[random.randint(0, len(list_n) - 2) + 1] = 'XX'
 
 
 	def more_specific(self, list1, list2):

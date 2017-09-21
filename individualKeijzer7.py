@@ -56,5 +56,7 @@ class individualKeijzer7(individual):
 
 
 individual = individualKeijzer7(7, 7)
-tree = individual.generate_subtree([['log', 2], ['sum', 2], ['exp', 1]], 4)
+tree = individual.generate_subtree([['log', 2], ['sum', 2], ['exp', 1]], 2)
+print(tree)
 individual.put_terminals_on_tree(tree, 2)
+print(tree)
