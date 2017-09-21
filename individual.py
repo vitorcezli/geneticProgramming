@@ -47,8 +47,6 @@ class individual(ABC):
 	def put_terminals_on_tree(self, tree, n_arguments):
 		"Defines the places of the terminals"
 		lists = self.get_all_lists(tree)
-		print(lists)
-		print("\n\n")
 
 		# delete general elements
 		indexes_deletion = []
@@ -60,14 +58,11 @@ class individual(ABC):
 					and index1 not in indexes_deletion:
 					indexes_deletion.append(index1)
 
-		print(indexes_deletion)
-		print("\n\n")
 		number_deleted = 0
 		for index in indexes_deletion:
 			del lists[index - number_deleted]
 			number_deleted += 1
 		print(lists)
-		print("\n\n")
 
 
 	def more_specific(self, list1, list2):
