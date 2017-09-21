@@ -22,7 +22,6 @@ class individual(ABC):
 		"Generates a list with a terminal"
 		generated_list = self.generate_function_list(list_functions)
 		generated_list[random.randint(0, len(generated_list) - 2) + 1] = 'XX'
-		print(generated_list)
 		return generated_list
 
 
@@ -44,7 +43,14 @@ class individual(ABC):
 				size - 1, 1 / (size - 1))
 			lists = self.get_all_lists(current_list)
 			selected_elements = self.select_elements_from_list(lists, n_arguments)
-			print(selected_elements)
+			
+			# puts the arguments indicator
+			change_list = current_list
+			for list_selected in selected_elements:
+				for index in list_selected[0]:
+					change_list = change_list[index]
+				change_list[random.randint(0, len(change_list) - 2) + 1] = 'XX'
+
 		return current_list
 
 
