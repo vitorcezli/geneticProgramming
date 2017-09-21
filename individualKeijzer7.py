@@ -55,8 +55,5 @@ class individualKeijzer7(individual):
 		return new_individual
 
 
-individual = individualKeijzer7(7, 3)
-individual2 = individualKeijzer7(7, 3)
-i = individual.cross(individual2)
-print(i.get_genotype())
-individual.generate_terminal_list([['log', 2], ['sum', 3], ['exp', 1]])
+individual = individualKeijzer7(7, 7)
+print(individual.generate_subtree([['log', 2], ['sum', 2], ['exp', 1]], 3))

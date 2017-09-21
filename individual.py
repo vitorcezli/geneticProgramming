@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from __future__ import division
 from abc import ABC, abstractmethod
 import copy
 import random
@@ -27,11 +28,36 @@ class individual(ABC):
 
 	def generate_function_list(self, list_functions):
 		"Generates a list with a function and its arguments"
-		selected_function = list_functions[random.randint(0, len(list_functions) - 1)]
+		selected_function = \
+			list_functions[random.randint(0, len(list_functions) - 1)]
 		generated_list = [selected_function[0]]
 		for index in range(selected_function[1]):
 			generated_list.append(random.random())
 		return generated_list
+
+
+	def generate_subtree(self, list_functions, size):
+		"Generates a random subtree with maximum size"
+		current_list = self.generate_function_list(list_functions)
+		if size > 1:
+			self.generate_subtree_h(current_list, list_functions, 0, \
+				size - 1, 1 / (size - 1))
+		return current_list
+
+
+	def generate_subtree_h(self, current_list, list_functions, \
+		index_depth, max_size, x_value):
+		"Generates a subtree with maximum size defined"
+		if index_depth == max_size:
+			return random.random()
+		list_size = len(current_list) - 1
+		for index in range(list_size):
+			if random.random() <= (1 - x_value / \
+				((1 - index_depth * x_value) * list_size)):
+				new_list = self.generate_function_list(list_functions)
+				self.generate_subtree_h(new_list, list_functions, \
+					index_depth + 1, max_size, x_value)
+				current_list[index + 1] = new_list
 
 
 	def get_size(self):
