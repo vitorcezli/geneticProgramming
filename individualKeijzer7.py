@@ -14,9 +14,11 @@ class individualKeijzer7(individual):
 
 	def generate_genotype(self, size):
 		"Generates the individual's genotype"
-		subtree = super().generate_subtree([['log', 2], ['sum', 2]], size)
-		print(subtree)
-		super().put_terminals_on_tree(subtree, super().get_number_arguments())
+		while True:
+			subtree = super().generate_subtree([['log', 2], ['sum', 2]], size)
+			super().put_terminals_on_tree(subtree, super().get_number_arguments())
+			if super().get_number_terminals(subtree) == super().get_number_arguments():
+				break
 		return subtree
 
 
@@ -58,5 +60,5 @@ class individualKeijzer7(individual):
 		return new_individual
 
 
-individual = individualKeijzer7(3, 2)
+individual = individualKeijzer7(3, 0)
 print(individual.get_genotype())

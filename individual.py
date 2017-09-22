@@ -50,7 +50,11 @@ class individual(ABC):
 		# get all possibilities
 		lists = self.get_all_lists(tree)
 		if lists == []:
-			lists = [[[0], tree, [len(tree)]]]
+			if len(tree) - 1 >= n_arguments:
+				self.put_terminals_on_everyplace([tree], [0], n_arguments)
+				return
+			else:
+				return
 
 		# delete general elements
 		indexes_deletion = []
@@ -72,7 +76,14 @@ class individual(ABC):
 			for element in lists_terminal:
 				self.put_terminal_on_list(tree, element[0])
 		else:
-			return None
+			sum_size = 0
+			put = n_arguments
+			for element in lists_terminal:
+				sum_size += len(element[1]) - 1
+			if sum_size < n_arguments:
+				return
+			for element in lists_terminal:
+				put = self.put_terminals_on_everyplace(tree, element[0], put)
 
 
 	def put_terminal_on_list(self, list_s, places):
@@ -81,6 +92,20 @@ class individual(ABC):
 		for place in places:
 			list_n = list_n[place]
 		list_n[random.randint(0, len(list_n) - 2) + 1] = 'XX'
+
+
+	def put_terminals_on_everyplace(self, list_s, places, n_put):
+		"Puts terminal on everyplace of a list"
+		list_n = list_s
+		for place in places:
+			list_n = list_n[place]
+		for index in range(1, len(list_n)):
+			if n_put == 0:
+				return 0
+			else:
+				list_n[index] = 'XX'
+				n_put -= 1
+		return n_put
 
 
 	def more_specific(self, list1, list2):
@@ -96,9 +121,9 @@ class individual(ABC):
 
 	def select_elements_from_list(self, lists, number):
 		"Selects elements from list"
-		if number == len(lists):
+		if number >= len(lists):
 			return lists
-		elif number < len(lists):
+		else:
 			select_list = []
 			while number > 0:
 				selected_index = random.randint(0, len(lists) - 1)
@@ -106,8 +131,6 @@ class individual(ABC):
 				del lists[selected_index]
 				number -= 1
 			return select_list
-		else:
-			return None
 
 
 	def generate_subtree_h(self, current_list, list_functions, \
@@ -189,6 +212,11 @@ class individual(ABC):
 			elif tree_string[index] == ']':
 				deep -= 1
 		return maximum
+
+
+	def get_number_terminals(self, tree):
+		"Gets the number of terminals"
+		return str(tree).count("XX")
 
 
 	def get_all_lists_h(self, current_list, iuh, list_all):
