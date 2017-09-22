@@ -10,10 +10,12 @@ class individual(ABC):
 
 	def __init__(self, size, number_arguments, functions_list, genotype):
 		"Initializes the tree with its genotype"
+		# individual definition
 		self.functions_list = functions_list
 		self.number_arguments = number_arguments
 		self.size = size
 		
+		# initializes the individual genotype
 		if genotype is None:
 			self.genotype = self.generate_genotype(size)
 		else:
@@ -51,7 +53,7 @@ class individual(ABC):
 		"Generates a random subtree with maximum size"
 		current_list = self.generate_function_list(list_functions)
 		if size > 1:
-			self.generate_subtree_h(current_list, list_functions, 0, \
+			self.generate_subtree_aux(current_list, list_functions, 0, \
 				size - 1, 1 / (size - 1))
 		return current_list
 
@@ -144,7 +146,7 @@ class individual(ABC):
 			return select_list
 
 
-	def generate_subtree_h(self, current_list, list_functions, \
+	def generate_subtree_aux(self, current_list, list_functions, \
 		index_depth, max_size, x_value):
 		"Generates a subtree with maximum size defined"
 		if index_depth == max_size:
@@ -154,7 +156,7 @@ class individual(ABC):
 			if random.random() <= (1 - x_value / \
 				((1 - index_depth * x_value) * list_size)):
 				new_list = self.generate_function_list(list_functions)
-				self.generate_subtree_h(new_list, list_functions, \
+				self.generate_subtree_aux(new_list, list_functions, \
 					index_depth + 1, max_size, x_value)
 				current_list[index + 1] = new_list
 
@@ -180,14 +182,14 @@ class individual(ABC):
 		return self.classify_datum_with_values(datum_and_values)
 
 
-	def get_datum_with_values_h(self, values, vi, g_list):
+	def get_datum_with_values_aux(self, values, vi, g_list):
 		"Gets the datum with the values recursively"
 		for index in range(len(g_list)):
 			if g_list[index] == 'XX':
 				g_list[index] = values[vi]
 				vi += 1
 			elif type(g_list[index]) is list:
-				vi = self.get_datum_with_values_h(values, vi, g_list[index])
+				vi = self.get_datum_with_values_aux(values, vi, g_list[index])
 		return vi
 
 
@@ -198,14 +200,14 @@ class individual(ABC):
 			exit(1)
 
 		genotype_copy = copy.deepcopy(self.get_genotype())
-		self.get_datum_with_values_h(values, 0, genotype_copy)
+		self.get_datum_with_values_aux(values, 0, genotype_copy)
 		return genotype_copy
 
 
 	def get_all_lists(self, lists):
 		"Gets all lists for crossover"
 		list_all = []
-		self.get_all_lists_h(lists, [], list_all)
+		self.get_all_lists_aux(lists, [], list_all)
 		return list_all
 
 
@@ -230,7 +232,7 @@ class individual(ABC):
 		return str(tree).count("XX")
 
 
-	def get_all_lists_h(self, current_list, iuh, list_all):
+	def get_all_lists_aux(self, current_list, iuh, list_all):
 		"Gets all lists for crossover recursively"
 		for index in range(len(current_list)):
 			if type(current_list[index]) is list:
@@ -238,7 +240,7 @@ class individual(ABC):
 				list_indexes.append(index)
 				list_all.append([list_indexes] + [copy.deepcopy(current_list[index])] +
 					[[self.get_tree_size(current_list[index])]])
-				self.get_all_lists_h(current_list[index], list_indexes, list_all)
+				self.get_all_lists_aux(current_list[index], list_indexes, list_all)
 
 
 	def get_genotype_of_cross(self, other_individual):
