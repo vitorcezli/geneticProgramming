@@ -50,7 +50,7 @@ class individualKeijzer7(individual):
 		return new_individual
 
 
-individual = individualKeijzer7(4, 10)
+individual = individualKeijzer7(4, 5)
 print(individual.get_genotype())
 individual.mutate()
 print("\n\n")
