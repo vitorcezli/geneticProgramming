@@ -42,29 +42,6 @@ class individualKeijzer7(individual):
 			exit(1)
 
 
-	def mutate(self):
-		"Mutates the individual"
-		genotype = super().get_genotype()
-		if super().get_tree_size(genotype) > 1:
-			lists = super().get_all_lists(genotype)
-			selected = super().select_elements_from_list(lists, 1)
-			max_size = super().get_size() - len(selected[0][0])
-			if max_size >= 1:
-				number_arguments = super().get_number_terminals(selected[0][1])
-				list_s = genotype
-				for index in selected[0][0][0 : len(selected[0][0]) - 1]:
-					list_s = list_s[index]
-
-				new_tree = []
-				while True:
-					new_tree = super().generate_subtree([['log', 2], ['sum', 2]], max_size)
-					super().put_terminals_on_tree(new_tree, number_arguments)
-					if super().get_number_terminals(new_tree) == number_arguments:
-						break
-				list_s[selected[0][0][len(selected[0][0]) - 1]] = new_tree
-
-
-
 	def cross(self, other_individual):
 		"Returns a new individual using crossover operation"
 		new_genotype = super().get_genotype_of_cross(other_individual)
