@@ -247,7 +247,7 @@ class individual(ABC):
 		"Returns a new genotype using crossover operation"
 		# get possibilities for crossover
 		this_list = self.get_all_lists(self.get_genotype())
-		other_list = other_individual.get_all_lists(self.get_genotype())
+		other_list = self.get_all_lists(other_individual.get_genotype())
 		possibilities = []
 		for tl in this_list:
 			for ol in other_list:
@@ -256,8 +256,13 @@ class individual(ABC):
 						possibilities.append(tl)
 						possibilities.append(ol)
 
+		# if possibilities is less than or equal to 1 an error will occur. For it
+		# do not happen the genotype of the first individual is returned
+		if len(possibilities) <= 1:
+			return self.get_genotype()
+
 		# selects genotypes for crossover
-		random_index = random.randint(0, len(possibilities) / 2 - 1)
+		random_index = random.randint(0, int(len(possibilities) / 2) - 1)
 		indexes_substitution = possibilities[2 * random_index][0]
 		genotypes_substitution = possibilities[2 * random_index + 1][1]
 

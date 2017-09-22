@@ -44,13 +44,22 @@ class individualKeijzer7(individual):
 	def cross(self, other_individual):
 		"Returns a new individual using crossover operation"
 		new_genotype = super().get_genotype_of_cross(other_individual)
-		new_individual = individualKeijzer7(super().get_size(), \
-			super().get_number_arguments(), new_genotype)
+		new_individual = individualKeijzer7(new_genotype)
 		return new_individual
 
 
 individual = individualKeijzer7()
 print(individual.get_genotype())
-individual.mutate()
 print("\n\n")
-print(individual.get_genotype())
+
+individual2 = individualKeijzer7()
+print(individual2.get_genotype())
+print("\n\n")
+
+new_individual = individual.cross(individual2)
+print(new_individual.get_genotype())
+print("\n\n")
+
+new_individual.mutate()
+print(new_individual.get_genotype())
+print("\n\n")
