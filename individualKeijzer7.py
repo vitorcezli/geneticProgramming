@@ -7,10 +7,9 @@ import math
 class individualKeijzer7(individual):
 	"The representation for a genetic programming keijzer7 individual"
 
-	def __init__(self, size, number_arguments, genotype = None):
+	def __init__(self, genotype = None):
 		"Initializes the tree with its genotype"
-		super().__init__(size, number_arguments, \
-			[['log', 2], ['sum', 2]], genotype)
+		super().__init__(3, 2, [['log', 2], ['sum', 2]], genotype)
 
 
 	def classify_datum_with_values(self, datum_and_values):
@@ -50,7 +49,7 @@ class individualKeijzer7(individual):
 		return new_individual
 
 
-individual = individualKeijzer7(4, 5)
+individual = individualKeijzer7()
 print(individual.get_genotype())
 individual.mutate()
 print("\n\n")
