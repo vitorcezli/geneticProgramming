@@ -9,17 +9,8 @@ class individualKeijzer7(individual):
 
 	def __init__(self, size, number_arguments, genotype = None):
 		"Initializes the tree with its genotype"
-		super().__init__(size, number_arguments, genotype)
-
-
-	def generate_genotype(self, size):
-		"Generates the individual's genotype"
-		while True:
-			subtree = super().generate_subtree([['log', 2], ['sum', 2]], size)
-			super().put_terminals_on_tree(subtree, super().get_number_arguments())
-			if super().get_number_terminals(subtree) == super().get_number_arguments():
-				break
-		return subtree
+		super().__init__(size, number_arguments, \
+			[['log', 2], ['sum', 2]], genotype)
 
 
 	def classify_datum_with_values(self, datum_and_values):
@@ -82,7 +73,7 @@ class individualKeijzer7(individual):
 		return new_individual
 
 
-individual = individualKeijzer7(4, 5)
+individual = individualKeijzer7(4, 10)
 print(individual.get_genotype())
 individual.mutate()
 print("\n\n")

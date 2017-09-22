@@ -8,8 +8,9 @@ import random
 class individual(ABC):
 	"The representation for a genetic programming individual"
 
-	def __init__(self, size, number_arguments, genotype):
+	def __init__(self, size, number_arguments, functions_list, genotype):
 		"Initializes the tree with its genotype"
+		self.functions_list = functions_list
 		self.number_arguments = number_arguments
 		self.size = size
 		
@@ -17,6 +18,16 @@ class individual(ABC):
 			self.genotype = self.generate_genotype(size)
 		else:
 			self.genotype = genotype
+
+
+	def generate_genotype(self, size):
+		"Generates the individual's genotype"
+		while True:
+			subtree = self.generate_subtree(self.functions_list, size)
+			self.put_terminals_on_tree(subtree, self.get_number_arguments())
+			if self.get_number_terminals(subtree) == self.get_number_arguments():
+				break
+		return subtree
 
 
 	def generate_terminal_list(self, list_functions):
@@ -261,12 +272,6 @@ class individual(ABC):
 	@abstractmethod
 	def classify_datum_with_values(self, datum_and_values):
 		"Classifies the data based on the genotype using recursion"
-		pass
-
-
-	@abstractmethod
-	def generate_genotype(self, size):
-		"Generates the individual's genotype"
 		pass
 
 
