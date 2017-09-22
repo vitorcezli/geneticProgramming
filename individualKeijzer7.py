@@ -32,7 +32,11 @@ class individualKeijzer7(individual):
 		elif datum_and_values[0] == 'log':
 			base = self.classify_datum_with_values(datum_and_values[1])
 			exponent = self.classify_datum_with_values(datum_and_values[2])
-			return math.log(exponent, base)
+			if math.fabs(base) < 2:
+				base = 2
+			if math.fabs(exponent) < 1:
+				exponent = 1
+			return math.log(math.fabs(exponent), math.fabs(base))
 
 		# classifies for sum function
 		elif datum_and_values[0] == 'sum':
@@ -49,7 +53,25 @@ class individualKeijzer7(individual):
 
 	def mutate(self):
 		"Mutates the individual"
-		pass
+		genotype = super().get_genotype()
+		if super().get_tree_size(genotype) > 1:
+			lists = super().get_all_lists(genotype)
+			selected = super().select_elements_from_list(lists, 1)
+			max_size = super().get_size() - len(selected[0][0])
+			if max_size >= 1:
+				number_arguments = super().get_number_terminals(selected[0][1])
+				list_s = genotype
+				for index in selected[0][0][0 : len(selected[0][0]) - 1]:
+					list_s = list_s[index]
+
+				new_tree = []
+				while True:
+					new_tree = super().generate_subtree([['log', 2], ['sum', 2]], max_size)
+					super().put_terminals_on_tree(new_tree, number_arguments)
+					if super().get_number_terminals(new_tree) == number_arguments:
+						break
+				list_s[selected[0][0][len(selected[0][0]) - 1]] = new_tree
+
 
 
 	def cross(self, other_individual):
@@ -60,5 +82,8 @@ class individualKeijzer7(individual):
 		return new_individual
 
 
-individual = individualKeijzer7(3, 0)
+individual = individualKeijzer7(4, 5)
+print(individual.get_genotype())
+individual.mutate()
+print("\n\n")
 print(individual.get_genotype())

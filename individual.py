@@ -270,7 +270,6 @@ class individual(ABC):
 		pass
 
 
-	@abstractmethod
 	def mutate(self):
 		"Mutates the individual"
 		pass
