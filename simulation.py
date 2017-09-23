@@ -21,6 +21,16 @@ class simulation:
 		return math.sqrt(sum(difference_square) / len(difference_square))
 
 
+	def calculate_final_difference(self, individual):
+		"Calculates the difference on the test set"
+		difference = [self.test[i][len(self.test[0]) - 1] - \
+			individual.classify(self.test[i][0 : len(self.test[0]) - 1]) \
+			for i in range(len(self.test))]
+		difference_square = [math.pow(dif, 2) for dif in difference]
+		return math.sqrt(sum(difference_square) / len(difference_square))
+
+
+
 
 test = simulation('keijzer-7-train.csv', 'keijzer-7-test.csv')
 ind = individualKeijzer7()
