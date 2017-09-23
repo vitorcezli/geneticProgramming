@@ -18,7 +18,8 @@ class simulation:
 		self.population = []
 		for individual in individuals:
 			self.population.append([individual, self.fitness(individual)])
-			print(self.fitness(individual))
+
+		self.select_from_tournament(self.population)
 
 
 	def execute_epoch(self):
@@ -42,6 +43,12 @@ class simulation:
 			individual2.mutate()
 		return [[individual1, self.fitness(individual1)], \
 			[individual2, self.fitness(individual2)]]
+
+
+	def select_from_tournament(self, individuals):
+		"Selects individual from tournament"
+		individuals_sorted = sorted(individuals, key = lambda x: x[1])
+		return individuals_sorted[0]		
 
 
 	def fitness(self, individual):
