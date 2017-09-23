@@ -2,6 +2,7 @@
 from __future__ import division
 from individualKeijzer7 import individualKeijzer7
 import numpy
+import random
 import math
 
 
@@ -9,9 +10,15 @@ class simulation:
 	"This class implements the simulation operation"
 
 	def __init__(self, data_train, data_test, individuals):
+		# initializes datasets
 		self.train = numpy.loadtxt(open(data_train, "rb"), delimiter=",", skiprows=0)
 		self.test = numpy.loadtxt(open(data_test, "rb"), delimiter=",", skiprows=0)
-		self.population = individuals
+		
+		# initializes population
+		self.population = []
+		for individual in individuals:
+			self.population.append([individual, self.fitness(individual)])
+			print(self.fitness(individual))
 
 
 	def execute_epoch(self):
@@ -22,11 +29,22 @@ class simulation:
 		better_than_fathers = 0
 		worse_than_fathers = 0
 
-		# initializes the fitness variable
-		fitness = [-1 for i in range(len(self.population))]
+
+	def create_sons_from_fathers(self, father1, father2, mutation):
+		"Creates new individuals"
+		individual1 = father1.cross(father2)
+		individual2 = father2.cross(father1)
+
+		# apply mutation if possible
+		if random.random() < mutation:
+			individual1.mutate()
+		if random.random() < mutation:
+			individual2.mutate()
+		return [[individual1, self.fitness(individual1)], \
+			[individual2, self.fitness(individual2)]]
 
 
-	def calculate_fitness(self, individual):
+	def fitness(self, individual):
 		"Calculates the fitness of an individual given the trainset"
 		difference = [self.train[i][len(self.train[0]) - 1] - \
 			individual.classify(self.train[i][0 : len(self.train[0]) - 1]) \
