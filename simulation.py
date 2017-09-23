@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from __future__ import division
 from individualKeijzer7 import individualKeijzer7
 import numpy
 import math
@@ -7,9 +8,22 @@ import math
 class simulation:
 	"This class implements the simulation operation"
 
-	def __init__(self, data_train, data_test):
+	def __init__(self, data_train, data_test, individuals):
 		self.train = numpy.loadtxt(open(data_train, "rb"), delimiter=",", skiprows=0)
 		self.test = numpy.loadtxt(open(data_test, "rb"), delimiter=",", skiprows=0)
+		self.population = individuals
+
+
+	def execute_epoch(self):
+		min_fitness = math.inf
+		max_fitness = -math.inf
+		mean_fitness = 0
+		number_same_individuals = 0
+		better_than_fathers = 0
+		worse_than_fathers = 0
+
+		# initializes the fitness variable
+		fitness = [-1 for i in range(len(self.population))]
 
 
 	def calculate_fitness(self, individual):
@@ -18,7 +32,9 @@ class simulation:
 			individual.classify(self.train[i][0 : len(self.train[0]) - 1]) \
 			for i in range(len(self.train))]
 		difference_square = [math.pow(dif, 2) for dif in difference]
-		return math.sqrt(sum(difference_square) / len(difference_square))
+		rmse = math.sqrt(sum(difference_square) / len(difference_square))
+		size_normalization = math.log1p(4 + individual.get_size() / 10)
+		return rmse / size_normalization
 
 
 	def calculate_final_difference(self, individual):
@@ -31,9 +47,5 @@ class simulation:
 
 
 
-
-test = simulation('keijzer-7-train.csv', 'keijzer-7-test.csv')
-ind = individualKeijzer7()
-print(ind.get_genotype())
-print(ind.classify([0]))
-print(test.calculate_fitness(ind))
+population = [individualKeijzer7() for i in range(100)]
+test = simulation('keijzer-7-train.csv', 'keijzer-7-test.csv', population)
