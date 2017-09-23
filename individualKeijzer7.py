@@ -8,7 +8,7 @@ class individualKeijzer7(individual):
 
 	def __init__(self, genotype = None):
 		"Initializes the tree with its genotype"
-		super().__init__(3, 2, [['log', 2], ['sum', 2]], genotype)
+		super().__init__(3, 1, [['log', 2], ['sum', 2]], genotype)
 
 
 	def list_classification(self, list_values):
@@ -40,22 +40,3 @@ class individualKeijzer7(individual):
 		new_genotype = super().get_genotype_of_cross(other_individual)
 		new_individual = individualKeijzer7(new_genotype)
 		return new_individual
-
-
-individual = individualKeijzer7()
-print(individual.get_genotype())
-print("\n\n")
-
-individual2 = individualKeijzer7()
-print(individual2.get_genotype())
-print("\n\n")
-
-new_individual = individual.cross(individual2)
-print(new_individual.get_genotype())
-print("\n\n")
-
-new_individual.mutate()
-print(new_individual.get_genotype())
-print("\n\n")
-
-print(new_individual.classify([10, 10]))
