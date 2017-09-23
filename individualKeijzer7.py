@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 from individual import individual
-import numbers
 import math
 
 
@@ -12,16 +11,11 @@ class individualKeijzer7(individual):
 		super().__init__(3, 2, [['log', 2], ['sum', 2]], genotype)
 
 
-	def classify_datum_with_values(self, datum_and_values):
-		"Classifies the data based on the genotype using recursion"
-		# returns the same number if there isn't a function
-		if isinstance(datum_and_values, numbers.Number):
-			return datum_and_values
-
-		# classifies for log function
-		elif datum_and_values[0] == 'log':
-			base = self.classify_datum_with_values(datum_and_values[1])
-			exponent = self.classify_datum_with_values(datum_and_values[2])
+	def list_classification(self, list_values):
+		"Returns the classification value of the list"
+		if list_values[0] == 'log':
+			base = self.classify_datum_with_values(list_values[1])
+			exponent = self.classify_datum_with_values(list_values[2])
 			if math.fabs(base) < 2:
 				base = 2
 			if math.fabs(exponent) < 1:
@@ -29,15 +23,15 @@ class individualKeijzer7(individual):
 			return math.log(math.fabs(exponent), math.fabs(base))
 
 		# classifies for sum function
-		elif datum_and_values[0] == 'sum':
-			factor1 = self.classify_datum_with_values(datum_and_values[1])
-			factor2 = self.classify_datum_with_values(datum_and_values[2])
+		elif list_values[0] == 'sum':
+			factor1 = self.classify_datum_with_values(list_values[1])
+			factor2 = self.classify_datum_with_values(list_values[2])
 			return factor1 + factor2
 
 		# an error has happened
 		else:
 			print("An error occurred on genotype format: %s" % 
-				(str(datum_and_values)))
+				(str(list_values)))
 			exit(1)
 
 
@@ -63,3 +57,5 @@ print("\n\n")
 new_individual.mutate()
 print(new_individual.get_genotype())
 print("\n\n")
+
+print(new_individual.classify([10, 10]))

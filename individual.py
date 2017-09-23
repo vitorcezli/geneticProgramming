@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from __future__ import division
 from abc import ABC, abstractmethod
+import numbers
 import copy
 import random
 
@@ -27,6 +28,8 @@ class individual(ABC):
 		while True:
 			subtree = self.generate_subtree(self.functions_list, size)
 			self.put_terminals_on_tree(subtree, self.get_number_arguments())
+
+			# stops when the number of terminals is correct
 			if self.get_number_terminals(subtree) == self.get_number_arguments():
 				break
 		return subtree
@@ -298,9 +301,22 @@ class individual(ABC):
 				list_s[selected[0][0][len(selected[0][0]) - 1]] = new_tree
 
 
-	@abstractmethod
 	def classify_datum_with_values(self, datum_and_values):
 		"Classifies the data based on the genotype using recursion"
+		# returns the same number if there isn't a function
+		if isinstance(datum_and_values, numbers.Number):
+			return datum_and_values
+
+		list_values = [datum_and_values[0]]
+		for index in range(1, len(datum_and_values)):
+			list_values.append(self.classify_datum_with_values(\
+				datum_and_values[index]))
+		return self.list_classification(list_values)
+
+
+	@abstractmethod
+	def list_classification(self, datum_and_values):
+		"Returns the classification value of the list"
 		pass
 
 
