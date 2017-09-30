@@ -26,6 +26,27 @@ class simulation:
 		for individual in individuals:
 			self.population.append([individual, self.fitness(individual)])
 
+		# initializes the matrix to plot
+		self.plot_matrix = []
+
+
+	def run_simulation(self, epoch, prob_cross, tour_size, mutation, n_elitism):
+		"Runs the genetic algorithm simulation"
+		while epoch > 0:
+			self.execute_epoch(prob_cross, tour_size, mutation, n_elitism)
+			epoch -= 1
+
+
+	def plot_values(self):
+		"Plots the found values for fitness, individuals and error on cross-set"
+		
+
+
+	def get_final_error(self):
+		"Calculates the error on the test set"
+		best_individual = self.select_elitism(self.population, 1)
+		return self.error_on_set(best_individual[0][0], self.test)	
+
 
 	def execute_epoch(self, prob_cross, tour_size, mutation, n_elitism):
 		"Executes an epoch"
@@ -54,6 +75,11 @@ class simulation:
 			max_fitness, better, worse,\
 			self.number_same_individuals(self.population), 
 			error_cross))
+		self.plot_matrix.append([min_fitness, mean_fitness, \
+			max_fitness, better, worse,\
+			self.number_same_individuals(self.population), 
+			error_cross]
+		)
 
 
 	def number_same_individuals(self, population):
@@ -152,13 +178,21 @@ class simulation:
 		return individuals_sorted[0]
 
 
-	def fitness(self, individual):
+	def fitness(self, individual, number = None):
 		"Calculates the fitness of an individual given the trainset"
-		difference = [self.train[i][len(self.train[0]) - 1] - \
-			individual.classify(self.train[i][0 : len(self.train[0]) - 1]) \
-			for i in range(len(self.train))]
+		if number is None:
+			rows = self.train
+		else:
+			rows = np.random.randint(0, self.train.shape[0], number)
+
+		# calculates the difference
+		difference = [rows[i][len(rows[0]) - 1] - \
+			individual.classify(rows[i][0 : len(rows[0]) - 1]) \
+			for i in range(len(rows))]
 		difference_square = [math.pow(dif, 2) for dif in difference]
 		rmse = math.sqrt(sum(difference_square) / len(difference_square))
+
+		# the difference calculated is normalized by the tree size
 		size_normalization = math.log1p(4 + individual.get_size() / 10)
 		return rmse / size_normalization
 
@@ -175,6 +209,5 @@ class simulation:
 
 population = [individualKeijzer7() for i in range(100)]
 test = simulation('keijzer-7-train.csv', 'keijzer-7-test.csv', population)
-
-for i in range(300):
-	test.execute_epoch(0.8, 2, 0.7, 10)
+test.run_simulation(50, 0.8, 2, 0.7, 10)
+print(test.get_final_error())
