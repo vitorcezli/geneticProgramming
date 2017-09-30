@@ -10,8 +10,15 @@ class simulation:
 	"This class implements the simulation operation"
 
 	def __init__(self, data_train, data_test, individuals):
-		# initializes datasets
+		# initializes the training set
 		self.train = numpy.loadtxt(open(data_train, "rb"), delimiter=",", skiprows=0)
+		numpy.random.shuffle(self.train)
+
+		# 30% of training data will be used for cross-validation
+		self.cross = self.train[: int(len(self.train) * 0.3)]
+		self.train = self.train[int(len(self.train) * 0.3 + 1) :]
+
+		# initializes the test set
 		self.test = numpy.loadtxt(open(data_test, "rb"), delimiter=",", skiprows=0)
 		
 		# initializes population
@@ -38,8 +45,15 @@ class simulation:
 		mean_fitness = sum([j[len(self.population[0]) - 1] for j in self.population]) / \
 			len(self.population)
 
-		print("%f,%f,%f,%d,%d,%d" % (min_fitness, mean_fitness, \
-			max_fitness, better, worse,self.number_same_individuals(self.population)))
+		# calculates the error on cross-validation set
+		best_individual = self.select_elitism(self.population, 1)
+		error_cross = self.error_on_set(best_individual[0][0], self.cross)
+
+		# prints the values found in this epoch
+		print("%f,%f,%f,%d,%d,%d,%f" % (min_fitness, mean_fitness, \
+			max_fitness, better, worse,\
+			self.number_same_individuals(self.population), 
+			error_cross))
 
 
 	def number_same_individuals(self, population):
@@ -149,11 +163,11 @@ class simulation:
 		return rmse / size_normalization
 
 
-	def calculate_final_difference(self, individual):
-		"Calculates the difference on the test set"
-		difference = [self.test[i][len(self.test[0]) - 1] - \
-			individual.classify(self.test[i][0 : len(self.test[0]) - 1]) \
-			for i in range(len(self.test))]
+	def error_on_set(self, individual, dataset):
+		"Calculates the difference on the specified set"
+		difference = [dataset[i][len(dataset[0]) - 1] - \
+			individual.classify(dataset[i][0 : len(dataset[0]) - 1]) \
+			for i in range(len(dataset))]
 		difference_square = [math.pow(dif, 2) for dif in difference]
 		return math.sqrt(sum(difference_square) / len(difference_square))
 
@@ -163,4 +177,4 @@ population = [individualKeijzer7() for i in range(100)]
 test = simulation('keijzer-7-train.csv', 'keijzer-7-test.csv', population)
 
 for i in range(300):
-	test.execute_epoch(0.9, 2, 0.05, 10)
+	test.execute_epoch(0.8, 2, 0.7, 10)
