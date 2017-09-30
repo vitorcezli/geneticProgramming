@@ -22,29 +22,53 @@ class simulation:
 
 	def execute_epoch(self, prob_cross, tour_size, mutation, n_elitism):
 		"Executes an epoch"
-		min_fitness = min([j[len(self.population[0]) - 1] for j in self.population])
-		max_fitness = max([j[len(self.population[0]) - 1] for j in self.population])
-		mean_fitness = sum([j[len(self.population[0]) - 1] for j in self.population]) / \
-			len(self.population)
-
-		print("%f,%f,%f" % (min_fitness, mean_fitness, max_fitness))
-
-		number_same_individuals = 0
-		better_than_fathers = 0
-		worse_than_fathers = 0
-
-		sons = self.generate_sons(self.population, tour_size, \
+		# generates new sons
+		[sons, better, worse] = self.generate_sons(self.population, tour_size, \
 			mutation, len(self.population) * prob_cross)
 
+		# completes the next generation using selection
 		sons += self.select_elitism(self.population, n_elitism)
 		sons += self.select_individuals(self.population, \
 			len(self.population) - len(sons))
 		self.population = sons
 
+		# calculates the fitness after the epoch
+		min_fitness = min([j[len(self.population[0]) - 1] for j in self.population])
+		max_fitness = max([j[len(self.population[0]) - 1] for j in self.population])
+		mean_fitness = sum([j[len(self.population[0]) - 1] for j in self.population]) / \
+			len(self.population)
+
+		print("%f,%f,%f,%d,%d,%d" % (min_fitness, mean_fitness, \
+			max_fitness, better, worse,self.number_same_individuals(self.population)))
+
+
+	def number_same_individuals(self, population):
+		"Returns the number of same individuals"
+		# variables that will be used to count
+		individuals = [str(individual[0]) for individual in population]
+		dictIndividual = {}
+		same = 0
+
+		# puts each time the individual appears on the dictionary
+		for individual in individuals:
+			if individual in dictIndividual:
+				dictIndividual[individual] += 1
+			else:
+				dictIndividual[individual] = 1
+
+		# gets the number of repeated individuals
+		for individual, count in dictIndividual.items():
+			if count > 1:
+				same += count
+		return same
+
 
 	def generate_sons(self, individuals, tour_size, mutation, number_sons):
 		"Generates two new sons"
 		sons = []
+		better = 0
+		worse = 0
+
 		while len(sons) < number_sons:
 			# gets the first father
 			selected = self.select_individuals(individuals, tour_size)
@@ -55,8 +79,15 @@ class simulation:
 			father2 = self.select_from_tournament(selected)
 
 			# generates new sons
-			sons += self.create_sons_from_fathers(father1[0], father2[0], mutation)
-		return sons
+			newsons = self.create_sons_from_fathers(father1[0], father2[0], mutation)
+			sons += newsons
+
+			for son in newsons:
+				if self.compare_with_fathers(son, father1, father2) == 1:
+					better += 1
+				elif self.compare_with_fathers(son, father1, father2) == -1:
+					worse += 1
+		return [sons, better, worse]
 
 
 	def create_sons_from_fathers(self, father1, father2, mutation):
@@ -75,7 +106,12 @@ class simulation:
 
 	def compare_with_fathers(self, son, father1, father2):
 		"Returns if the son is better or worse than its fathers"
-		
+		if son[1] > father1[1] and son[1] > father2[1]:
+			return 1
+		elif son[1] == father1[1] and son[1] == father2[1]:
+			return 0
+		else:
+			return -1
 
 
 	def select_individuals(self, individuals, number):
@@ -122,15 +158,9 @@ class simulation:
 		return math.sqrt(sum(difference_square) / len(difference_square))
 
 
-	def get_best(self):
-		return self.select_elitism(self.population, 1)[0]
-
-
 
 population = [individualKeijzer7() for i in range(100)]
 test = simulation('keijzer-7-train.csv', 'keijzer-7-test.csv', population)
 
 for i in range(300):
-	test.execute_epoch(0.9, 7, 0.1, 10)
-
-print(test.calculate_final_difference(test.get_best()[0]))
+	test.execute_epoch(0.9, 2, 0.05, 10)
