@@ -92,19 +92,21 @@ class simulation:
 		"Executes an epoch"
 		# generates new sons
 		[sons, better, worse] = self.generate_sons(self.population, tour_size, \
-			mutation, len(self.population) * prob_cross)
+			mutation, len(self.population))
 
-		# completes the next generation using selection
-		sons += self.select_elitism(self.population, n_elitism)
-		sons += self.select_individuals(self.population, \
-			len(self.population) - len(sons))
-		self.population = sons
+		# adds the sons using the probability of crossover for the next population
+		new_generation = self.select_individuals(sons, \
+			int(len(self.population) * prob_cross))
+		new_generation += self.select_elitism(self.population, n_elitism)
+		new_generation += self.select_individuals(self.population, \
+			len(self.population) - len(new_generation))
+		self.population = new_generation
 
 		# calculates the fitness after the epoch
 		min_fitness = min([j[len(self.population[0]) - 1] for j in self.population])
 		max_fitness = max([j[len(self.population[0]) - 1] for j in self.population])
-		mean_fitness = sum([j[len(self.population[0]) - 1] for j in self.population]) / \
-			len(self.population)
+		mean_fitness = sum([j[len(self.population[0]) - 1] \
+			for j in self.population]) / len(self.population)
 
 		# calculates the error on cross-validation set
 		best_individual = self.select_elitism(self.population, 1)
@@ -198,7 +200,7 @@ class simulation:
 
 
 	def select_individuals(self, individuals, number):
-		"Selects the passed number of individuals"
+		"Selects individuals based on their fitness"
 		if number >= len(individuals):
 			return individuals
 		else:
