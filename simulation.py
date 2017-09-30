@@ -4,6 +4,7 @@ from individualKeijzer7 import individualKeijzer7
 import numpy
 import random
 import math
+import matplotlib.pyplot as plt
 
 
 class simulation:
@@ -23,6 +24,7 @@ class simulation:
 		
 		# initializes population
 		self.population = []
+		self.fitness_set = self.return_subset(30)
 		for individual in individuals:
 			self.population.append([individual, self.fitness(individual)])
 
@@ -37,9 +39,47 @@ class simulation:
 			epoch -= 1
 
 
-	def plot_values(self):
+	def return_subset(self, number):
+		"Defines the examples that will be used on fitness calculation"
+		return [self.train[random.randint(0, len(self.train) - 1)] \
+			for i in range(number)]
+
+
+	def plot_fitness(self):
 		"Plots the found values for fitness, individuals and error on cross-set"
-		
+		epoch_array = [i + 1 for i in range(len(self.plot_matrix))]
+		plt.plot(epoch_array, self.get_column(self.plot_matrix, 0), color = 'b')
+		plt.plot(epoch_array, self.get_column(self.plot_matrix, 1), color = 'g')
+		plt.plot(epoch_array, self.get_column(self.plot_matrix, 2), color = 'r')
+		plt.show()
+
+
+	def plot_better_worse(self):
+		"Plots the number of individuals that are better/worse than their fathers"
+		epoch_array = [i + 1 for i in range(len(self.plot_matrix))]
+		plt.plot(epoch_array, self.get_column(self.plot_matrix, 3), color = 'b')
+		plt.plot(epoch_array, self.get_column(self.plot_matrix, 4), color = 'r')
+		plt.show()
+
+
+	def plot_same(self):
+		"Plots the number of repeated individuals in a generation"
+		epoch_array = [i + 1 for i in range(len(self.plot_matrix))]
+		plt.plot(epoch_array, self.get_column(self.plot_matrix, 5), color = 'b')
+		plt.show()
+
+
+	def plot_train_cross(self):
+		"Plots the best individual's fitness on the training and cross-validation set"
+		epoch_array = [i + 1 for i in range(len(self.plot_matrix))]
+		plt.plot(epoch_array, self.get_column(self.plot_matrix, 0), color = 'b')
+		plt.plot(epoch_array, self.get_column(self.plot_matrix, 6), color = 'g')
+		plt.show()
+
+
+	def get_column(self, matrix, column):
+		"Returns the column of a matrix as an array"
+		return [i[column] for i in matrix]
 
 
 	def get_final_error(self):
@@ -80,6 +120,9 @@ class simulation:
 			self.number_same_individuals(self.population), 
 			error_cross]
 		)
+
+		# redefine the fitness
+		self.fitness_set = self.return_subset(30)
 
 
 	def number_same_individuals(self, population):
@@ -178,17 +221,12 @@ class simulation:
 		return individuals_sorted[0]
 
 
-	def fitness(self, individual, number = None):
+	def fitness(self, individual):
 		"Calculates the fitness of an individual given the trainset"
-		if number is None:
-			rows = self.train
-		else:
-			rows = np.random.randint(0, self.train.shape[0], number)
-
 		# calculates the difference
-		difference = [rows[i][len(rows[0]) - 1] - \
-			individual.classify(rows[i][0 : len(rows[0]) - 1]) \
-			for i in range(len(rows))]
+		difference = [self.fitness_set[i][len(self.fitness_set[0]) - 1] - \
+			individual.classify(self.fitness_set[i][0 : len(self.fitness_set[0]) - 1]) \
+			for i in range(len(self.fitness_set))]
 		difference_square = [math.pow(dif, 2) for dif in difference]
 		rmse = math.sqrt(sum(difference_square) / len(difference_square))
 
@@ -211,3 +249,7 @@ population = [individualKeijzer7() for i in range(100)]
 test = simulation('keijzer-7-train.csv', 'keijzer-7-test.csv', population)
 test.run_simulation(50, 0.8, 2, 0.7, 10)
 print(test.get_final_error())
+test.plot_fitness()
+test.plot_better_worse()
+test.plot_same()
+test.plot_train_cross()
