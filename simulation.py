@@ -73,6 +73,11 @@ class simulation:
 			[individual2, self.fitness(individual2)]]
 
 
+	def compare_with_fathers(self, son, father1, father2):
+		"Returns if the son is better or worse than its fathers"
+		
+
+
 	def select_individuals(self, individuals, number):
 		"Selects the passed number of individuals"
 		if number >= len(individuals):
@@ -117,9 +122,15 @@ class simulation:
 		return math.sqrt(sum(difference_square) / len(difference_square))
 
 
+	def get_best(self):
+		return self.select_elitism(self.population, 1)[0]
+
+
 
 population = [individualKeijzer7() for i in range(100)]
 test = simulation('keijzer-7-train.csv', 'keijzer-7-test.csv', population)
 
-for i in range(200):
-	test.execute_epoch(0.5, 7, 0.01, 10)
+for i in range(300):
+	test.execute_epoch(0.9, 7, 0.1, 10)
+
+print(test.calculate_final_difference(test.get_best()[0]))
