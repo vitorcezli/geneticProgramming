@@ -251,41 +251,43 @@ class simulation:
 		return math.sqrt(sum(difference_square) / len(difference_square))
 
 
+# variables used on test
 cross_error = []
-times = 10
+times = 30
 test = None
 
-#for time in range(times):
-#	population = [individualKeijzer7() for i in range(200)]
-#	test = simulation('keijzer-7-train.csv', 'keijzer-7-test.csv', population)
-#	test.run_simulation(25, 0.9, 2, 1, 10)
-#	cross_error.append(test.get_cross_error())
-#	print("Simulation %d done" % (time + 1))
+# test keijzer-7 set
+for time in range(times):
+	population = [individualKeijzer7() for i in range(200)]
+	test = simulation('keijzer-7-train.csv', 'keijzer-7-test.csv', population)
+	test.run_simulation(25, 0.9, 2, 1, 10)
+	cross_error.append(test.get_cross_error())
+	print("Simulation %d done" % (time + 1))
+print("Cross-validation error: %f" % (statistics.mean(cross_error)))
+print("Cross-validation variance: %f" % (statistics.variance(cross_error)))
+print("Test error: %f" % (test.get_final_error()))
 
-#print("Cross-validation error: %f" % (statistics.mean(cross_error)))
-#print("Cross-validation variance: %f" % (statistics.variance(cross_error)))
-#print("Test error: %f" % (test.get_final_error()))
+# test keijzer-10 set
+cross_error = []
+for time in range(times):
+	population = [individualKeijzer10() for i in range(200)]
+	test = simulation('keijzer-10-train.csv', 'keijzer-10-test.csv', population)
+	test.run_simulation(25, 0.9, 7, 1, 10)
+	cross_error.append(test.get_cross_error())
+	print("Simulation %d done" % (time + 1))
+print("Cross-validation error: %f" % (statistics.mean(cross_error)))
+print("Cross-validation variance: %f" % (statistics.variance(cross_error)))
+print("Test error: %f" % (test.get_final_error()))
 
-
-#cross_error = []
-#for time in range(times):
-#	population = [individualKeijzer10() for i in range(200)]
-#	test = simulation('keijzer-10-train.csv', 'keijzer-10-test.csv', population)
-#	test.run_simulation(25, 0.9, 7, 1, 10)
-#	cross_error.append(test.get_cross_error())
-#	print("Simulation %d done" % (time + 1))
-
-#print("Cross-validation error: %f" % (statistics.mean(cross_error)))
-#print("Cross-validation variance: %f" % (statistics.variance(cross_error)))
-#print("Test error: %f" % (test.get_final_error()))
-
-
-# test one try
-population = [house() for i in range(50)]
-test = simulation('house-train.csv', 'house-test.csv', population)
-test.run_simulation(25, 0.9, 7, 1, 10)
-print(test.get_final_error())
-test.plot_fitness()
-test.plot_better_worse()
-test.plot_same()
-test.plot_train_cross()
+# test house set
+times = 10
+cross_error = []
+for time in range(times):
+	population = [house() for i in range(50)]
+	test = simulation('house-train.csv', 'house-test.csv', population)
+	test.run_simulation(25, 0.9, 10, 0.1, 10)
+	cross_error.append(test.get_cross_error())
+	print("Simulation %d done" % (time + 1))
+print("Cross-validation error: %f" % (statistics.mean(cross_error)))
+print("Cross-validation variance: %f" % (statistics.variance(cross_error)))
+print("Test error: %f" % (test.get_final_error()))

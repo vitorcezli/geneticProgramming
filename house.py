@@ -9,7 +9,7 @@ class house(individual):
 	def __init__(self, genotype = None):
 		"Initializes the tree with its genotype"
 		super().__init__(7, 8, [['log', 2], ['sum', 2], ['mul', 2], \
-			['pow', 2]], genotype)
+			['pow', 2], ['sqr', 1]], genotype)
 
 
 	def list_classification(self, list_values):
@@ -39,10 +39,14 @@ class house(individual):
 			factor2 = self.classify_datum_with_values(list_values[2])
 
 			# it is being used to avoid overflow
-			if factor2 < 7:
+			if factor2 < 3:
 				return factor1 ** factor2
 			else:
-				return factor1 ** 7
+				return factor1 ** 3
+
+		elif list_values[0] == 'sqr':
+			factor1 = self.classify_datum_with_values(list_values[1])
+			return math.sqrt(factor1)
 
 		# an error has happened
 		else:

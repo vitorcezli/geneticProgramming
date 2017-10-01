@@ -8,7 +8,7 @@ class individualKeijzer10(individual):
 
 	def __init__(self, genotype = None):
 		"Initializes the tree with its genotype"
-		super().__init__(7, 2, [['log', 2], ['sum', 2], \
+		super().__init__(5, 2, [['log', 2], ['sum', 2], \
 			['pow', 2], ['mul', 2]], genotype)
 
 
