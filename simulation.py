@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 from __future__ import division
 from individualKeijzer7 import individualKeijzer7
+from individualKeijzer10 import individualKeijzer10
+from house import house
 import numpy
 import random
 import math
@@ -97,6 +99,10 @@ class simulation:
 		# adds the sons using the probability of crossover for the next population
 		new_generation = self.select_individuals(sons, \
 			int(len(self.population) * prob_cross))
+
+		print(len(new_generation))
+		exit()
+
 		new_generation += self.select_elitism(self.population, n_elitism)
 		new_generation += self.select_individuals(self.population, \
 			len(self.population) - len(new_generation))
@@ -249,7 +255,7 @@ class simulation:
 
 population = [individualKeijzer7() for i in range(100)]
 test = simulation('keijzer-7-train.csv', 'keijzer-7-test.csv', population)
-test.run_simulation(50, 0.8, 2, 0.7, 10)
+test.run_simulation(25, 0.5, 2, 0.5, 10)
 print(test.get_final_error())
 test.plot_fitness()
 test.plot_better_worse()
