@@ -116,10 +116,6 @@ class simulation:
 		error_cross = self.error_on_set(best_individual[0][0], self.cross)
 
 		# prints the values found in this epoch
-		print("%f,%f,%f,%d,%d,%d,%f" % (min_fitness, mean_fitness, \
-			max_fitness, better, worse,\
-			self.number_same_individuals(self.population), 
-			error_cross))
 		self.plot_matrix.append([min_fitness, mean_fitness, \
 			max_fitness, better, worse,\
 			self.number_same_individuals(self.population), 
@@ -261,7 +257,7 @@ test = None
 for time in range(times):
 	population = [individualKeijzer7() for i in range(200)]
 	test = simulation('keijzer-7-train.csv', 'keijzer-7-test.csv', population)
-	test.run_simulation(25, 0.5, 2, 1, 10)
+	test.run_simulation(25, 0.9, 2, 1, 10)
 	cross_error.append(test.get_cross_error())
 	print("Simulation %d done" % (time + 1))
 
