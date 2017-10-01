@@ -3,6 +3,7 @@ from __future__ import division
 from individualKeijzer7 import individualKeijzer7
 from individualKeijzer10 import individualKeijzer10
 from house import house
+import copy
 import numpy
 import random
 import math
@@ -99,9 +100,6 @@ class simulation:
 		# adds the sons using the probability of crossover for the next population
 		new_generation = self.select_individuals(sons, \
 			int(len(self.population) * prob_cross))
-
-		print(len(new_generation))
-		exit()
 
 		new_generation += self.select_elitism(self.population, n_elitism)
 		new_generation += self.select_individuals(self.population, \
@@ -210,9 +208,8 @@ class simulation:
 		if number >= len(individuals):
 			return individuals
 		else:
-			selection = []
-			selection.append(individuals[random.randint(0, len(individuals) - 1)])
-			return selection
+			random.shuffle(individuals)
+			return individuals[0 : number]
 
 
 	def select_elitism(self, individuals, number):
