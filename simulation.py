@@ -3,7 +3,6 @@ from __future__ import division
 from individualKeijzer7 import individualKeijzer7
 from individualKeijzer10 import individualKeijzer10
 from house import house
-import copy
 import numpy
 import random
 import math
@@ -131,6 +130,12 @@ class simulation:
 		self.fitness_set = self.return_subset(30)
 
 
+	def get_cross_error(self):
+		"Return the last cross-set error"
+		return self.plot_matrix[len(self.plot_matrix) - 1]\
+			[len(self.plot_matrix[0]) - 1]
+
+
 	def number_same_individuals(self, population):
 		"Returns the number of same individuals"
 		# variables that will be used to count
@@ -249,12 +254,27 @@ class simulation:
 		return math.sqrt(sum(difference_square) / len(difference_square))
 
 
+cross_error = []
+times = 30
 
-population = [individualKeijzer7() for i in range(100)]
-test = simulation('keijzer-7-train.csv', 'keijzer-7-test.csv', population)
-test.run_simulation(25, 0.5, 2, 0.5, 10)
-print(test.get_final_error())
-test.plot_fitness()
-test.plot_better_worse()
-test.plot_same()
-test.plot_train_cross()
+test = None
+for time in range(times):
+	population = [individualKeijzer7() for i in range(200)]
+	test = simulation('keijzer-7-train.csv', 'keijzer-7-test.csv', population)
+	test.run_simulation(25, 0.5, 2, 1, 10)
+	cross_error.append(test.get_cross_error())
+	print("Simulation %d done" % (time + 1))
+
+print("Cross-validation error %f" % (sum(cross_error) / len(cross_error)))
+print("Test error: %f" % (test.get_final_error()))
+
+
+# test one try
+#population = [individualKeijzer7() for i in range(200)]
+#test = simulation('keijzer-7-train.csv', 'keijzer-7-test.csv', population)
+#test.run_simulation(25, 0.9, 2, 1, 10)
+#print(test.get_final_error())
+#test.plot_fitness()
+#test.plot_better_worse()
+#test.plot_same()
+#test.plot_train_cross()
